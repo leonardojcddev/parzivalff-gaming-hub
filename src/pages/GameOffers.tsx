@@ -9,8 +9,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Coins, Ticket, Info } from 'lucide-react';
+import { Session } from '@supabase/supabase-js';
 
-export default function GameOffers() {
+interface GameOffersProps {
+  session: Session | null;
+  profile: any;
+}
+
+export default function GameOffers({ session, profile }: GameOffersProps) {
   const { slug } = useParams<{ slug: string }>();
   const [filter, setFilter] = useState<'all' | 'currency' | 'battlepass'>('all');
   const game = getGameBySlug(slug || '');
@@ -22,7 +28,7 @@ export default function GameOffers() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar session={session} profile={profile} />
       <section className="relative pt-20 pb-12">
         <div className="absolute inset-0 h-64">
           <img src={game.banner} alt={game.name} className="w-full h-full object-cover" />

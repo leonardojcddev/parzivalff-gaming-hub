@@ -4,11 +4,17 @@ import { Hero } from '@/components/ui/hero';
 import { GameCard } from '@/components/cards/GameCard';
 import { FloatingWhatsAppButton } from '@/components/ui/floating-whatsapp';
 import { games } from '@/data/mockData';
+import { Session } from '@supabase/supabase-js';
 
-export default function Games() {
+interface GamesProps {
+  session: Session | null;
+  profile: any;
+}
+
+export default function Games({ session, profile }: GamesProps) {
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar session={session} profile={profile} />
       <Hero title="Nuestros Juegos" subtitle="Selecciona tu juego favorito y encuentra las mejores ofertas de recargas" size="sm" />
       <section className="py-16">
         <div className="container mx-auto px-4">

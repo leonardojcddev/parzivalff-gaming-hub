@@ -16,7 +16,7 @@ export default function Login() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      nav("/dashboard");
+      nav("/");
     } catch (e2: any) {
       setErr(e2.message || "Error");
     } finally {
@@ -28,7 +28,7 @@ export default function Login() {
     setErr("");
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: window.location.origin + "/dashboard" },
+      options: { redirectTo: window.location.origin + "/" },
     });
     if (error) setErr(error.message);
   }
