@@ -10,11 +10,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Star } from 'lucide-react';
+import { Session } from '@supabase/supabase-js';
 
-export default function Reviews() {
+interface ReviewsProps {
+  session: Session | null;
+  profile: any;
+}
+
+export default function Reviews({ session, profile }: ReviewsProps) {
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar session={session} profile={profile} />
       <Hero title="Referencias de Clientes" subtitle="Miles de gamers confían en nosotros. Lee lo que dicen sobre nuestro servicio." size="sm" />
       
       <section className="py-16">

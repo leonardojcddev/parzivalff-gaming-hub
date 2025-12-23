@@ -1,8 +1,17 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Gamepad2, User } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, X, Gamepad2, User, Shield, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Session } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const navLinks = [
   { name: 'Inicio', href: '/' },
@@ -11,10 +20,16 @@ const navLinks = [
   { name: 'Referencias', href: '/reviews' },
 ];
 
-export function Navbar() {
+interface NavbarProps {
+  session: Session | null;
+  profile: any;
+}
+
+export function Navbar({ session, profile }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +42,14 @@ export function Navbar() {
   useEffect(() => {
     setIsOpen(false);
   }, [location]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
+
+  const isAdmin = profile?.role === 'admin';
+  const userEmail = session?.user?.email;
 
   return (
     <header
@@ -71,12 +94,46 @@ export function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-3">
-            <Link to="/login">
-              <Button variant="ghost" size="sm" className="gap-2">
-                <User className="h-4 w-4" />
-                Iniciar sesión
-              </Button>
-            </Link>
+            {session ? (
+              <>
+                {isAdmin && (
+                  <Link to="/admin">
+                    <Button variant="outline" size="sm" className="gap-2 border-primary/50 text-primary hover:bg-primary/10">
+                      <Shield className="h-4 w-4" />
+                      Admin
+                    </Button>
+                  </Link>
+                )}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="gap-2">
+                      <User className="h-4 w-4" />
+                      <span className="max-w-[120px] truncate">{userEmail}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem asChild>
+                      <Link to="/dashboard" className="w-full cursor-pointer">
+                        <User className="h-4 w-4 mr-2" />
+                        Mi perfil
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Cerrar sesión
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <Link to="/login">
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <User className="h-4 w-4" />
+                  Iniciar sesión
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -112,13 +169,39 @@ export function Navbar() {
               {link.name}
             </Link>
           ))}
-          <div className="pt-4 border-t border-border">
-            <Link to="/login">
-              <Button variant="outline" className="w-full gap-2">
-                <User className="h-4 w-4" />
-                Iniciar sesión
-              </Button>
-            </Link>
+          <div className="pt-4 border-t border-border space-y-2">
+            {session ? (
+              <>
+                <div className="px-4 py-2 text-sm text-muted-foreground truncate">
+                  {userEmail}
+                </div>
+                {isAdmin && (
+                  <Link to="/admin">
+                    <Button variant="outline" className="w-full gap-2 border-primary/50 text-primary">
+                      <Shield className="h-4 w-4" />
+                      Panel Admin
+                    </Button>
+                  </Link>
+                )}
+                <Link to="/dashboard">
+                  <Button variant="outline" className="w-full gap-2">
+                    <User className="h-4 w-4" />
+                    Mi perfil
+                  </Button>
+                </Link>
+                <Button variant="destructive" className="w-full gap-2" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4" />
+                  Cerrar sesión
+                </Button>
+              </>
+            ) : (
+              <Link to="/login">
+                <Button variant="outline" className="w-full gap-2">
+                  <User className="h-4 w-4" />
+                  Iniciar sesión
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

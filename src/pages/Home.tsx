@@ -10,6 +10,7 @@ import { ReviewCard } from '@/components/cards/ReviewCard';
 import { FloatingWhatsAppButton } from '@/components/ui/floating-whatsapp';
 import { games, getFeaturedOffers, reviews } from '@/data/mockData';
 import { Zap, Shield, HeadphonesIcon, Search, CreditCard, MessageCircle, Package } from 'lucide-react';
+import { Session } from '@supabase/supabase-js';
 
 const steps = [
   { icon: Search, title: 'Elige tu juego', description: 'Selecciona entre nuestra amplia variedad de juegos disponibles' },
@@ -18,13 +19,18 @@ const steps = [
   { icon: Package, title: 'Recibe tu recarga', description: 'En minutos recibirás tus diamantes o pase' },
 ];
 
-export default function Home() {
+interface HomeProps {
+  session: Session | null;
+  profile: any;
+}
+
+export default function Home({ session, profile }: HomeProps) {
   const featuredOffers = getFeaturedOffers();
   const featuredReviews = reviews.slice(0, 3);
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar session={session} profile={profile} />
       
       <Hero
         title="Tu tienda de Recargas Gaming"

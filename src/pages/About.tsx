@@ -6,6 +6,7 @@ import { FloatingWhatsAppButton } from '@/components/ui/floating-whatsapp';
 import { faqs } from '@/data/mockData';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Target, Zap, Heart, ShieldCheck } from 'lucide-react';
+import { Session } from '@supabase/supabase-js';
 
 const values = [
   { icon: Zap, title: 'Rapidez', description: 'Entregas en minutos, no en horas. Tu tiempo es valioso.' },
@@ -13,10 +14,15 @@ const values = [
   { icon: ShieldCheck, title: 'Seguridad', description: 'Proceso 100% transparente y seguro para ti.' },
 ];
 
-export default function About() {
+interface AboutProps {
+  session: Session | null;
+  profile: any;
+}
+
+export default function About({ session, profile }: AboutProps) {
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar session={session} profile={profile} />
       <Hero title="Sobre ParzivalFF Recargas" subtitle="Tu socio de confianza para recargas gaming en Latinoamérica" size="sm" />
 
       <section className="py-16">
