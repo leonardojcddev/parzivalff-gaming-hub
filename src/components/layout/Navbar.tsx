@@ -71,10 +71,12 @@ export function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="ghost" size="sm" className="gap-2">
-              <User className="h-4 w-4" />
-              Iniciar sesión
-            </Button>
+            <Link to="/login">
+              <Button variant="ghost" size="sm" className="gap-2">
+                <User className="h-4 w-4" />
+                Iniciar sesión
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -111,10 +113,12 @@ export function Navbar() {
             </Link>
           ))}
           <div className="pt-4 border-t border-border">
-            <Button variant="outline" className="w-full gap-2">
-              <User className="h-4 w-4" />
-              Iniciar sesión
-            </Button>
+            <Link to="/login">
+              <Button variant="outline" className="w-full gap-2">
+                <User className="h-4 w-4" />
+                Iniciar sesión
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
